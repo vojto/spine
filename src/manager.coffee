@@ -49,7 +49,9 @@ Spine.Controller.include
     @
   
   deactivate: ->
-    @el.removeClass('active')
+    if @el.hasClass('active')
+      @el.removeClass('active')
+      @trigger 'deactivate'
     @
     
 class Spine.Stack extends Spine.Controller
