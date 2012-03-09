@@ -2,7 +2,7 @@ describe("Model", function(){
   var Asset;
 
   beforeEach(function(){
-    Asset = Spine.Model.setup("Asset", ["name"]);
+    Asset = Spine.Model.setup("Asset", ["name", "rank"]);
   });
 
   it("can create records", function(){
@@ -71,6 +71,17 @@ describe("Model", function(){
     var selected = Asset.select(function(rec){ return rec.name == "foo.pdf" });
 
     expect(selected).toEqual([asset2]);
+  });
+  
+  it("can select records by attributes hash", function(){
+    var asset1 = Asset.create({name: "foo", rank: 0});
+    var asset2 = Asset.create({name: "foo", rank: 0});
+    var asset3 = Asset.create({name: "bar", rank: 0});
+    var asset4 = Asset.create({name: "bar", rank: 1});
+    
+    var selected = Asset.select({name: "foo", rank: 0});
+    
+    expect(selected).toEqual([asset1, asset2]);
   });
 
   it("can return all records", function(){

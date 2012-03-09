@@ -133,9 +133,23 @@ class Model extends Module
     @trigger('refresh', not options.clear and @cloneArray(records))
     this
 
-  @select: (callback) ->
+  @select: (function_or_attrs) ->
+    if typeof function_or_attrs == 'function'
+      @selectByFunction(function_or_attrs)
+    else if typeof function_or_attrs == 'object'
+      @selectByAttributes(function_or_attrs)
+    else
+      throw 'Expected function or an object'
+  
+  @selectByFunction: (callback) ->
     result = (record for id, record of @records when callback(record))
     @cloneArray(result)
+  
+  @selectByAttributes: (attributes) ->
+    @selectByFunction (record) ->
+      for name, value of attributes
+        return false if record[name] isnt value
+      true
 
   @findByAttribute: (name, value) ->
     for id, record of @records
